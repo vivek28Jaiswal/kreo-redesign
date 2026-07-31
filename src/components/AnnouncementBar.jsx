@@ -14,8 +14,8 @@ const AnnouncementBar = () => {
   ];
 
   return (
-    <div className="bg-kreo-purple text-white py-2 overflow-hidden select-none relative z-30">
-      <div className="animate-marquee-slow flex items-center space-x-6 text-[13px] font-medium tracking-wide">
+    <div className="bg-kreo-purple text-white py-2 overflow-hidden select-none relative z-30 mx-6 mt-6 rounded-[4px]">
+      <div className="animate-marquee-slow flex items-center space-x-6 text-[13px] font-[ppnormal] tracking-wide">
         {/* Doubled for seamless infinite scroll loop */}
         {[...items, ...items].map((text, idx) => (
           <React.Fragment key={idx}>

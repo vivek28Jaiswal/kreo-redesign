@@ -3,6 +3,73 @@
 @tailwind utilities;
 
 @font-face {
+  font-family: 'ppthin';
+  src: url('/fonts/ppneuemontreal-thin.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'pplight';
+  src: url('/fonts/ppneuemontreal-thin.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ppnormal';
+  src: url('/fonts/PPNeueMontreal-Regular.ttf') format('truetype'),
+       url('/fonts/ppneuemontreal-book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ppregular';
+  src: url('/fonts/PPNeueMontreal-Regular.ttf') format('truetype'),
+       url('/fonts/ppneuemontreal-book.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ppmedium';
+  src: url('/fonts/PPNeueMontreal-Medium.ttf') format('truetype'),
+       url('/fonts/ppneuemontreal-medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ppbold';
+  src: url('/fonts/ppneuemontreal-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ppitalic';
+  src: url('/fonts/ppneuemontreal-italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ppsemibolditalic';
+  src: url('/fonts/ppneuemontreal-semibolditalic.otf') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'PP Neue Montreal';
   src: url('/fonts/PPNeueMontreal-Regular.ttf') format('truetype'),
        url('/fonts/ppneuemontreal-book.otf') format('opentype');

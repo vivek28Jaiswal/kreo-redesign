@@ -8,10 +8,18 @@ export default {
     extend: {
       fontFamily: {
         montreal: ['"PP Neue Montreal"', 'sans-serif'],
+        ppthin: ['ppthin', 'sans-serif'],
+        pplight: ['pplight', 'sans-serif'],
+        ppnormal: ['ppnormal', 'sans-serif'],
+        ppregular: ['ppregular', 'sans-serif'],
+        ppmedium: ['ppmedium', 'sans-serif'],
+        ppbold: ['ppbold', 'sans-serif'],
+        ppitalic: ['ppitalic', 'sans-serif'],
+        ppsemibolditalic: ['ppsemibolditalic', 'sans-serif'],
       },
       colors: {
-        'kreo-purple': '#6455F2',
-        'kreo-purple-dark': '#5243DF',
+        'kreo-purple': '#685ACA',
+        'kreo-purple-dark': '#5A4DB0',
         'kreo-dark': '#0F0F10',
         'kreo-nav-dark': '#111113',
         'kreo-gray': '#6B7280',
