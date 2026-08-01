@@ -199,7 +199,7 @@ const SectionStage = ({ section }) => {
           ref={headingRef}
           className={`text-4xl md:text-5xl xl:text-6xl leading-[1.06] tracking-tight mb-4 text-neutral-900 ${textAlign} will-change-transform`}
         >
-          <span className="block font-light text-neutral-900">{section.headingLight}</span>
+          <span className="block font-medium text-neutral-900">{section.headingLight}</span>
           <span className="block font-medium text-neutral-900">{section.headingBold}</span>
         </h2>
 
