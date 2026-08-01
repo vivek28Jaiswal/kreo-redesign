@@ -991,7 +991,7 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                         pivotGroup.position,
                         {
                             x: -0.1,
-                            y: -0.02,
+                            y: 0.8,
                             z: 0,
                             duration: 1.8,
                             ease: "power2.inOut",

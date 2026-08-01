@@ -12,6 +12,12 @@ function App() {
   const [isRevealed, setIsRevealed] = useState(false);
 
   useEffect(() => {
+    // 1. Reset scroll position to top 0 on reload / initial page load
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     // Initialize Lenis smooth scroll for buttery smooth inertia scrolling
     const lenis = new Lenis({
       duration: 1.2,
@@ -20,6 +26,9 @@ function App() {
       wheelMultiplier: 1,
       touchMultiplier: 2,
     });
+
+    // Ensure immediate reset to top 0 on Lenis mount
+    lenis.scrollTo(0, { immediate: true });
 
     lenis.on('scroll', ScrollTrigger.update);
 
@@ -30,7 +39,25 @@ function App() {
     gsap.ticker.add(updateTicker);
     gsap.ticker.lagSmoothing(0);
 
+    // Smooth Scroll to Top helper for ESC trigger
+    const scrollToTop = () => {
+      lenis.scrollTo(0, { duration: 1.2 });
+    };
+
+    window.__scrollToTop = scrollToTop;
+
+    // 2. Global keyboard listener for ESC key press
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        scrollToTop();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      delete window.__scrollToTop;
       gsap.ticker.remove(updateTicker);
       lenis.destroy();
     };

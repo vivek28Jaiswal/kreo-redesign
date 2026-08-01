@@ -70,21 +70,20 @@ const sections = [
   {
     id: 's07',
     align: 'center',
-    eyebrow: 'Industrial Masterpiece',
-    headingLight: 'Kreo',
-    headingBold: 'Mechanical.',
-    subtitle: 'Crafted for creators, programmers, and purists. An uncompromised typing experience.',
-    spec: 'Custom Keycaps · Hot-Swappable',
+    isFinal: true,
+    eyebrow: '',
+    headingLight: 'Kreo Mechanical',
+    headingBold: '',
+    subtitle: 'Built with premium materials, precision engineering, and performance at its core. Every detail is designed to deliver a keyboard that feels as exceptional as it looks.',
+    spec: '',
   },
 ];
 
 const SectionStage = ({ section }) => {
   const containerRef = useRef(null);
   const contentRef = useRef(null);
-  const eyebrowRef = useRef(null);
   const headingRef = useRef(null);
   const subtitleRef = useRef(null);
-  const specRef = useRef(null);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -115,7 +114,7 @@ const SectionStage = ({ section }) => {
           opacity: 1,
           filter: 'blur(0px)',
           clipPath: 'inset(0% 0% 0% 0%)',
-          duration: 0.9,
+          duration: 0.8,
           ease: EASE_EDITORIAL_ENTER,
         });
       }
@@ -126,10 +125,10 @@ const SectionStage = ({ section }) => {
           {
             opacity: 1,
             filter: 'blur(0px)',
-            duration: 0.7,
+            duration: 0.6,
             ease: EASE_EDITORIAL_ENTER,
           },
-          '-=0.5'
+          '-=0.4'
         );
       }
     };
@@ -140,7 +139,7 @@ const SectionStage = ({ section }) => {
       gsap.to(elements, {
         opacity: 0,
         filter: 'blur(10px)',
-        duration: 0.45,
+        duration: 0.4,
         stagger: 0.03,
         ease: EASE_EDITORIAL_EXIT,
         onComplete: () => {
@@ -152,8 +151,8 @@ const SectionStage = ({ section }) => {
     // Trigger entrance when section enters middle of screen
     const st = ScrollTrigger.create({
       trigger: el,
-      start: 'top 65%',
-      end: 'bottom 35%',
+      start: section.isFinal ? 'top 80%' : 'top 65%',
+      end: section.isFinal ? 'bottom 10%' : 'bottom 35%',
       onEnter: playEntrance,
       onLeave: playExit,
       onEnterBack: playEntrance,
@@ -161,10 +160,11 @@ const SectionStage = ({ section }) => {
     });
 
     return () => st.kill();
-  }, []);
+  }, [section.isFinal]);
 
   const isRight = section.align === 'right';
   const isCenter = section.align === 'center';
+  const isFinal = section.isFinal;
 
   const alignClasses = isCenter
     ? 'items-center justify-center text-center'
@@ -177,50 +177,33 @@ const SectionStage = ({ section }) => {
 
   return (
     <section
+      id={section.id}
       ref={containerRef}
-      className={`relative w-full h-screen flex ${alignClasses} ${px} pointer-events-none select-none`}
+      className={`relative w-full h-screen flex ${alignClasses} ${px} pointer-events-none select-none z-30`}
     >
       <div
         ref={contentRef}
-        className={`max-w-sm md:max-w-md flex flex-col ${isRight ? 'items-end' : isCenter ? 'items-center' : 'items-start'} ${textAlign}`}
+        className={`max-w-sm md:max-w-md lg:max-w-xl flex flex-col ${isRight ? 'items-end' : isCenter ? 'items-center' : 'items-start'} ${textAlign}`}
       >
-        {/* Eyebrow Label */}
-        {/* {section.eyebrow && (
-          <span
-            ref={eyebrowRef}
-            className="block text-[11px] uppercase tracking-[0.26em] font-mono text-neutral-400 mb-3 will-change-transform"
-          >
-            {section.eyebrow}
-          </span>
-        )} */}
-
         {/* Editorial Heading */}
         <h2
           ref={headingRef}
-          className={`text-4xl md:text-5xl xl:text-6xl leading-[1.06] tracking-tight mb-4 text-neutral-900 ${textAlign} will-change-transform`}
+          className={`text-4xl md:text-5xl xl:text-6xl leading-[1.06] tracking-tight mb-4 ${isFinal ? 'text-white font-medium mt-36' : 'text-neutral-900'} ${textAlign} will-change-transform`}
         >
-          <span className="block font-medium text-neutral-900">{section.headingLight}</span>
-          <span className="block font-medium text-neutral-900">{section.headingBold}</span>
+          <span className={`block font-medium ${isFinal ? 'text-white' : 'text-neutral-900'}`}>{section.headingLight}</span>
+          {section.headingBold && (
+            <span className={`block font-medium ${isFinal ? 'text-white' : 'text-neutral-900'}`}>{section.headingBold}</span>
+          )}
         </h2>
 
         {/* Editorial Paragraph */}
         <p
           ref={subtitleRef}
-          className={`text-sm text-neutral-500 font-normal mb-4 max-w-xs ${textAlign} will-change-transform`}
+          className={`text-sm md:text-base font-normal mb-4 ${isFinal ? 'text-white/95 max-w-lg' : 'text-neutral-500 max-w-xs'} ${textAlign} will-change-transform`}
           style={{ margin: isCenter ? '0 auto 16px' : undefined }}
         >
           {section.subtitle}
         </p>
-
-        {/* Specification Label */}
-        {/* {section.spec && (
-          <span
-            ref={specRef}
-            className="block text-[10px] font-mono tracking-[0.22em] uppercase text-neutral-400 will-change-transform"
-          >
-            {section.spec}
-          </span>
-        )} */}
       </div>
     </section>
   );

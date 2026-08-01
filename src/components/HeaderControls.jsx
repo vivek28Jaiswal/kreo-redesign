@@ -4,12 +4,21 @@ import { Volume2, VolumeX, Menu } from 'lucide-react';
 const HeaderControls = () => {
   const [isMuted, setIsMuted] = useState(true);
 
+  const handleEscClick = () => {
+    if (window.__scrollToTop) {
+      window.__scrollToTop();
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <header className="w-full px-6 md:px-6 mt-4 flex items-center justify-between relative z-20 pointer-events-auto">
       {/* Left: Esc Badge */}
-      <button 
-        aria-label="Escape key indicator"
-        className="bg-kreo-dark hover:bg-black text-white text-xs  px-3 py-2 rounded-[4px] shadow-sm transition-transform active:scale-95 duration-150 flex items-center justify-center cursor-pointer"
+      <button
+        onClick={handleEscClick}
+        aria-label="Scroll to top on Esc click"
+        className="bg-kreo-dark hover:bg-black text-white text-xs px-3 py-2 rounded-[4px] shadow-sm transition-transform active:scale-95 duration-150 flex items-center justify-center cursor-pointer"
       >
         Esc
       </button>
