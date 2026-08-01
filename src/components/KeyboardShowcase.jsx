@@ -575,6 +575,11 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                         },
                     });
 
+                    // Custom Motion Language Easings
+                    const EASE_CAM_CINEMATIC = "cubic-bezier(0.45, 0, 0.15, 1)";
+                    const EASE_KEY_DEPRESS = "cubic-bezier(0.32, 0.72, 0, 1)";
+                    const EASE_KEY_RELEASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+
                     // ── SECTION 01: MECHANICAL TYPING RIPPLE ──
                     // Camera tilts to see keyboard at a comfortable view angle
                     storyTl.to(
@@ -584,7 +589,7 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                             y: 0.35,
                             z: 8.2,
                             duration: 1,
-                            ease: "power2.inOut",
+                            ease: EASE_CAM_CINEMATIC,
                         },
                         1.0,
                     );
@@ -595,7 +600,7 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                             y: -0.24,
                             z: -0.06,
                             duration: 1,
-                            ease: "power2.inOut",
+                            ease: EASE_CAM_CINEMATIC,
                         },
                         1.0,
                     );

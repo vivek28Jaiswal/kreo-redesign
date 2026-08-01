@@ -1,10 +1,40 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import Lenis from 'lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HeroSection from './components/HeroSection';
 import FullscreenLoader from './components/FullscreenLoader';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const [isAssetReady, setIsAssetReady] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
+
+  useEffect(() => {
+    // Initialize Lenis smooth scroll for buttery smooth inertia scrolling
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+
+    const updateTicker = (time) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(updateTicker);
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      gsap.ticker.remove(updateTicker);
+      lenis.destroy();
+    };
+  }, []);
 
   const handleModelLoaded = useCallback(() => {
     setIsAssetReady(true);
