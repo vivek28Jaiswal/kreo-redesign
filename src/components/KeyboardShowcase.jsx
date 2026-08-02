@@ -215,8 +215,9 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
             }
         };
 
-        // lil-gui Setup
+        // lil-gui Setup (Temporarily Disabled)
         const gui = new GUI({ title: "Keyboard Dev Controls" });
+        gui.hide();
         const posFolder = gui.addFolder("Position (Pivot)");
         posFolder
             .add(params, "posX", -3, 3, 0.01)
@@ -619,9 +620,15 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
 
                         // Trigger soft typing sound rhythmically (every 6th key group) for gentle acoustic flow
                         if (idx % 6 === 0) {
-                            storyTl.call(() => {
-                                soundEngine.playKeyRipple(idx / Math.max(keyCount - 1, 1));
-                            }, null, waveDelay);
+                            storyTl.call(
+                                () => {
+                                    soundEngine.playKeyRipple(
+                                        idx / Math.max(keyCount - 1, 1),
+                                    );
+                                },
+                                null,
+                                waveDelay,
+                            );
                         }
 
                         group.subMeshes.forEach((mesh) => {
@@ -683,9 +690,21 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
 
                     if (centerGroup) {
                         // Soft magnetic switch lift & tactile press sound triggers
-                        storyTl.call(() => soundEngine.playSwitchLift(), null, 3.4);
-                        storyTl.call(() => soundEngine.playSwitchPress(), null, 4.4);
-                        storyTl.call(() => soundEngine.playSwitchPress(), null, 4.9);
+                        storyTl.call(
+                            () => soundEngine.playSwitchLift(),
+                            null,
+                            3.4,
+                        );
+                        storyTl.call(
+                            () => soundEngine.playSwitchPress(),
+                            null,
+                            4.4,
+                        );
+                        storyTl.call(
+                            () => soundEngine.playSwitchPress(),
+                            null,
+                            4.9,
+                        );
 
                         centerGroup.subMeshes.forEach((mesh) => {
                             const orig = mesh.userData.originalPosition;
@@ -782,7 +801,11 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                     );
 
                     // 3. High-intensity specular light sweep creating noticeable glare across metallic finish
-                    storyTl.call(() => soundEngine.playMetallicShimmer(), null, 5.8);
+                    storyTl.call(
+                        () => soundEngine.playMetallicShimmer(),
+                        null,
+                        5.8,
+                    );
 
                     storyTl.to(
                         keyLight,
@@ -838,7 +861,11 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
 
                     // ── SECTION 04: ROTARY DIAL — Camera glides to macro focus on dials ──
                     // Keyboard tilts to face top-left corner, camera moves close in
-                    storyTl.call(() => soundEngine.playRotaryDialSequence(), null, 8.5);
+                    storyTl.call(
+                        () => soundEngine.playRotaryDialSequence(),
+                        null,
+                        8.5,
+                    );
 
                     storyTl.to(
                         camera.position,
@@ -888,16 +915,20 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                     );
 
                     // Dual elegant Kreo Purple point lights in pivotGroup space (grazing keycap surface)
-                    const pulseLight = new THREE.PointLight(0x685ACA, 0, 8);
+                    const pulseLight = new THREE.PointLight(0x685aca, 0, 8);
                     pulseLight.position.set(-3.5, 0.45, 1.2);
                     pivotGroup.add(pulseLight);
 
-                    const pulseTopLight = new THREE.PointLight(0x685ACA, 0, 12);
+                    const pulseTopLight = new THREE.PointLight(0x685aca, 0, 12);
                     pulseTopLight.position.set(-3.5, 1.2, 1.8);
                     pivotGroup.add(pulseTopLight);
 
                     // Trigger single luxury light sweep sound as Kreo purple light beam begins sweep
-                    storyTl.call(() => soundEngine.playLatencyLightSweep(), null, 10.6);
+                    storyTl.call(
+                        () => soundEngine.playLatencyLightSweep(),
+                        null,
+                        10.6,
+                    );
 
                     // Fade in subtle Kreo Purple light beam
                     storyTl.to(
@@ -950,8 +981,16 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                     );
 
                     // ── EXPLODED VIEW: Separate by material layer (physical stack) ──
-                    storyTl.call(() => soundEngine.playSwitchLift(), null, 12.6);
-                    storyTl.call(() => soundEngine.playMagneticSnap(), null, 14.2);
+                    storyTl.call(
+                        () => soundEngine.playSwitchLift(),
+                        null,
+                        12.6,
+                    );
+                    storyTl.call(
+                        () => soundEngine.playMagneticSnap(),
+                        null,
+                        14.2,
+                    );
 
                     // Keycaps (Plastic_1/2)    → float UP     +Y
                     // Switch stems (Plastic_5) → float MID    +Y small
