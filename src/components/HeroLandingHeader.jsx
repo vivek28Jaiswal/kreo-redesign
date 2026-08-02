@@ -6,7 +6,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 /**
  * HeroLandingHeader — Initial Landing Title & Model Description.
- * Visible on screen load alongside the 3D model, softly dissolves out as user begins scrolling.
+ * Visible on screen load alongside the 3D model, smoothly fades & dissolves out
+ * as user begins scrolling, guaranteed to hide during product journey.
  */
 const HeroLandingHeader = ({ isRevealed }) => {
   const containerRef = useRef(null);
@@ -16,41 +17,35 @@ const HeroLandingHeader = ({ isRevealed }) => {
     if (!el) return;
 
     if (!isRevealed) {
-      gsap.set(el, { opacity: 0, filter: 'blur(12px)' });
+      gsap.set(el, { opacity: 0, filter: 'blur(12px)', display: 'none' });
       return;
     }
 
     // Reveal entrance when page loader finishes
+    gsap.set(el, { display: 'block' });
     gsap.to(el, {
       opacity: 1,
       filter: 'blur(0px)',
       duration: 1.2,
-      delay: 0.6,
+      delay: 0.5,
       ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
     });
 
-    // Dissolve out when scrolling past hero view into chapter 01
-    const journeyContainer = document.getElementById('product-journey-container');
-    if (!journeyContainer) return;
-
+    // Dissolve out reliably on scroll as user enters Section 01
     const st = ScrollTrigger.create({
-      trigger: journeyContainer,
+      trigger: '#product-journey-container',
       start: 'top top',
-      end: 'top -150px',
-      onLeave: () => {
-        gsap.to(el, {
-          opacity: 0,
-          filter: 'blur(10px)',
-          duration: 0.45,
-          ease: 'cubic-bezier(0.4, 0, 1, 1)',
-        });
-      },
-      onEnterBack: () => {
-        gsap.to(el, {
-          opacity: 1,
-          filter: 'blur(0px)',
-          duration: 0.6,
-          ease: 'cubic-bezier(0.16, 1, 0.3, 1)',
+      end: 'top -200px',
+      scrub: true,
+      onUpdate: (self) => {
+        const progress = self.progress; // 0 (hero) to 1 (scrolled down)
+        const opacity = Math.max(0, 1 - progress * 1.8);
+        const blur = (1 - opacity) * 12;
+
+        gsap.set(el, {
+          opacity: opacity,
+          filter: `blur(${blur}px)`,
+          display: opacity <= 0.01 ? 'none' : 'block',
         });
       },
     });

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -10,6 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 function App() {
   const [isAssetReady, setIsAssetReady] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
+  const lenisRef = useRef(null);
 
   useEffect(() => {
     // 1. Reset scroll position to top 0 on reload / initial page load
@@ -27,8 +28,14 @@ function App() {
       touchMultiplier: 2,
     });
 
+    lenisRef.current = lenis;
+
     // Ensure immediate reset to top 0 on Lenis mount
     lenis.scrollTo(0, { immediate: true });
+
+    // Lock scrolling initially during loader phase
+    lenis.stop();
+    document.body.style.overflow = 'hidden';
 
     lenis.on('scroll', ScrollTrigger.update);
 
@@ -46,22 +53,39 @@ function App() {
 
     window.__scrollToTop = scrollToTop;
 
-    // 2. Global keyboard listener for ESC key press
+    // 2. Global keyboard listener for ESC key press & reload reset
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         scrollToTop();
       }
     };
 
+    const handleBeforeUnload = () => {
+      window.scrollTo(0, 0);
+    };
+
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
       delete window.__scrollToTop;
       gsap.ticker.remove(updateTicker);
       lenis.destroy();
+      document.body.style.overflow = '';
     };
   }, []);
+
+  // Sync scroll lock/unlock with isRevealed state
+  useEffect(() => {
+    if (isRevealed) {
+      if (lenisRef.current) {
+        lenisRef.current.start();
+      }
+      document.body.style.overflow = '';
+    }
+  }, [isRevealed]);
 
   const handleModelLoaded = useCallback(() => {
     setIsAssetReady(true);
@@ -69,6 +93,10 @@ function App() {
 
   const handleReveal = useCallback(() => {
     setIsRevealed(true);
+    if (lenisRef.current) {
+      lenisRef.current.start();
+    }
+    document.body.style.overflow = '';
   }, []);
 
   return (

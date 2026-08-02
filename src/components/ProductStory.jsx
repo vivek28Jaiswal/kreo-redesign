@@ -4,11 +4,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-/**
- * Motion System Easings:
- * - Editorial Typography Reveal: High-precision in-place spawn curve
- * - Typography Exit: Soft, quiet in-place dissolve curve
- */
 const EASE_EDITORIAL_ENTER = 'cubic-bezier(0.16, 1, 0.3, 1)';
 const EASE_EDITORIAL_EXIT = 'cubic-bezier(0.4, 0, 1, 1)';
 
@@ -79,33 +74,32 @@ const sections = [
   },
 ];
 
+/**
+ * SectionStage — 100% Fixed Stationary On Screen.
+ * Never translates vertically on scroll; fades in and out purely in-place.
+ */
 const SectionStage = ({ section }) => {
-  const containerRef = useRef(null);
-  const contentRef = useRef(null);
+  const stageRef = useRef(null);
   const headingRef = useRef(null);
   const subtitleRef = useRef(null);
 
   useEffect(() => {
-    const el = containerRef.current;
+    const stage = stageRef.current;
     const heading = headingRef.current;
     const subtitle = subtitleRef.current;
+    const triggerEl = document.getElementById(section.id);
 
-    if (!el) return;
+    if (!stage || !triggerEl) return;
 
     const elements = [heading, subtitle].filter(Boolean);
 
-    // Initial state: 100% static in place (zero Y translation), hidden via opacity + blur + clipPath
-    gsap.set(elements, {
-      opacity: 0,
-      y: 0,
-      filter: 'blur(12px)',
-    });
-    if (heading) {
-      gsap.set(heading, { clipPath: 'inset(0% 0% 100% 0%)' });
-    }
+    // Initial state: Hidden in-place (zero Y translation, pure opacity + blur + display)
+    gsap.set(stage, { opacity: 0, display: 'none' });
+    gsap.set(elements, { opacity: 0, y: 0, filter: 'blur(12px)' });
 
-    // In-Place Spawn Reveal Animation
+    // In-Place Stationary Reveal
     const playEntrance = () => {
+      gsap.set(stage, { display: 'flex', opacity: 1 });
       gsap.killTweensOf(elements);
       const tl = gsap.timeline();
 
@@ -113,8 +107,7 @@ const SectionStage = ({ section }) => {
         tl.to(heading, {
           opacity: 1,
           filter: 'blur(0px)',
-          clipPath: 'inset(0% 0% 0% 0%)',
-          duration: 0.8,
+          duration: 0.7,
           ease: EASE_EDITORIAL_ENTER,
         });
       }
@@ -125,7 +118,7 @@ const SectionStage = ({ section }) => {
           {
             opacity: 1,
             filter: 'blur(0px)',
-            duration: 0.6,
+            duration: 0.55,
             ease: EASE_EDITORIAL_ENTER,
           },
           '-=0.4'
@@ -133,26 +126,25 @@ const SectionStage = ({ section }) => {
       }
     };
 
-    // In-Place Dissolve Exit Animation
+    // In-Place Stationary Dissolve
     const playExit = () => {
       gsap.killTweensOf(elements);
       gsap.to(elements, {
         opacity: 0,
         filter: 'blur(10px)',
-        duration: 0.4,
-        stagger: 0.03,
+        duration: 0.38,
+        stagger: 0.02,
         ease: EASE_EDITORIAL_EXIT,
         onComplete: () => {
-          if (heading) gsap.set(heading, { clipPath: 'inset(0% 0% 100% 0%)' });
+          gsap.set(stage, { display: 'none' });
         },
       });
     };
 
-    // Trigger entrance when section enters middle of screen
     const st = ScrollTrigger.create({
-      trigger: el,
-      start: section.isFinal ? 'top 80%' : 'top 65%',
-      end: section.isFinal ? 'bottom 10%' : 'bottom 35%',
+      trigger: triggerEl,
+      start: section.isFinal ? 'top 70%' : 'top 50%',
+      end: section.isFinal ? 'bottom 20%' : 'bottom 50%',
       onEnter: playEntrance,
       onLeave: playExit,
       onEnterBack: playEntrance,
@@ -160,7 +152,7 @@ const SectionStage = ({ section }) => {
     });
 
     return () => st.kill();
-  }, [section.isFinal]);
+  }, [section.id, section.isFinal]);
 
   const isRight = section.align === 'right';
   const isCenter = section.align === 'center';
@@ -176,44 +168,63 @@ const SectionStage = ({ section }) => {
   const px = 'px-8 md:px-24 lg:px-36';
 
   return (
-    <section
-      id={section.id}
-      ref={containerRef}
-      className={`relative w-full h-screen flex ${alignClasses} ${px} pointer-events-none select-none z-30`}
+    <div
+      ref={stageRef}
+      className={`fixed inset-0 ${alignClasses} ${px} pointer-events-none select-none z-30 opacity-0`}
+      style={{ display: 'none' }}
     >
       <div
-        ref={contentRef}
-        className={`max-w-sm md:max-w-md lg:max-w-xl flex flex-col ${isRight ? 'items-end' : isCenter ? 'items-center' : 'items-start'} ${textAlign}`}
+        className={`max-w-sm md:max-w-md lg:max-w-xl flex flex-col ${
+          isRight ? 'items-end' : isCenter ? 'items-center' : 'items-start'
+        } ${textAlign}`}
       >
         {/* Editorial Heading */}
         <h2
           ref={headingRef}
-          className={`text-4xl md:text-5xl xl:text-6xl leading-[1.06] tracking-tight mb-4 ${isFinal ? 'text-white font-medium mt-36' : 'text-neutral-900'} ${textAlign} will-change-transform`}
+          className={`text-4xl md:text-5xl xl:text-6xl leading-[1.06] tracking-tight mb-4 ${
+            isFinal ? 'text-white font-medium mt-36' : 'text-neutral-900'
+          } ${textAlign}`}
         >
-          <span className={`block font-medium ${isFinal ? 'text-white' : 'text-neutral-900'}`}>{section.headingLight}</span>
+          <span className={`block font-medium ${isFinal ? 'text-white' : 'text-neutral-900'}`}>
+            {section.headingLight}
+          </span>
           {section.headingBold && (
-            <span className={`block font-medium ${isFinal ? 'text-white' : 'text-neutral-900'}`}>{section.headingBold}</span>
+            <span className={`block font-medium ${isFinal ? 'text-white' : 'text-neutral-900'}`}>
+              {section.headingBold}
+            </span>
           )}
         </h2>
 
         {/* Editorial Paragraph */}
         <p
           ref={subtitleRef}
-          className={`text-sm md:text-base font-normal mb-4 ${isFinal ? 'text-white/95 max-w-lg' : 'text-neutral-500 max-w-xs'} ${textAlign} will-change-transform`}
+          className={`text-sm md:text-base font-normal mb-4 ${
+            isFinal ? 'text-white/95 max-w-lg' : 'text-neutral-500 max-w-xs'
+          } ${textAlign}`}
           style={{ margin: isCenter ? '0 auto 16px' : undefined }}
         >
           {section.subtitle}
         </p>
       </div>
-    </section>
+    </div>
   );
 };
 
 const ProductStory = () => {
   return (
     <div className="relative w-full pointer-events-none select-none">
+      {/* 1. Fixed Stationary Section Text Stages */}
       {sections.map((section) => (
         <SectionStage key={section.id} section={section} />
+      ))}
+
+      {/* 2. Document Flow Invisible Scroll Triggers */}
+      {sections.map((section) => (
+        <div
+          key={`trigger-${section.id}`}
+          id={section.id}
+          className="w-full h-screen pointer-events-none"
+        />
       ))}
     </div>
   );

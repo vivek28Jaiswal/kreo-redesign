@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Volume2, VolumeX, Menu } from 'lucide-react';
+import { soundEngine } from '../utils/soundEngine';
 
 const HeaderControls = () => {
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(soundEngine.getMuted());
+
+  useEffect(() => {
+    soundEngine.setMuted(isMuted);
+  }, [isMuted]);
 
   const handleEscClick = () => {
     if (window.__scrollToTop) {
@@ -10,6 +15,12 @@ const HeaderControls = () => {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  };
+
+  const toggleSound = () => {
+    const nextMute = !isMuted;
+    setIsMuted(nextMute);
+    soundEngine.setMuted(nextMute);
   };
 
   return (
@@ -27,9 +38,10 @@ const HeaderControls = () => {
       <div className="flex items-center gap-3">
         {/* Mute/Sound Toggle Button */}
         <button
-          onClick={() => setIsMuted(!isMuted)}
+          onClick={toggleSound}
           aria-label="Toggle Sound"
-          className="w-10 h-10 bg-kreo-dark hover:bg-black text-white rounded-full flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
+          className="w-10 h-10 bg-kreo-dark hover:bg-black text-white rounded-full flex items-center justify-center shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer relative"
+          title={isMuted ? "Click to enable sound" : "Sound Enabled"}
         >
           {isMuted ? (
             <VolumeX className="w-4 h-4 text-white/90" />

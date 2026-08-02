@@ -5,6 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { GUI } from "lil-gui";
+import { soundEngine } from "../utils/soundEngine";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -615,6 +616,14 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                         // Wave travels left→right over 1.4 units of timeline
                         const waveDelay =
                             1.3 + (idx / Math.max(keyCount - 1, 1)) * 1.4;
+
+                        // Trigger soft typing sound rhythmically (every 6th key group) for gentle acoustic flow
+                        if (idx % 6 === 0) {
+                            storyTl.call(() => {
+                                soundEngine.playKeyRipple(idx / Math.max(keyCount - 1, 1));
+                            }, null, waveDelay);
+                        }
+
                         group.subMeshes.forEach((mesh) => {
                             // Depress 1.0 units in local space, bounce back — simulates key travel
                             storyTl
@@ -673,6 +682,11 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                             : null;
 
                     if (centerGroup) {
+                        // Soft magnetic switch lift & tactile press sound triggers
+                        storyTl.call(() => soundEngine.playSwitchLift(), null, 3.4);
+                        storyTl.call(() => soundEngine.playSwitchPress(), null, 4.4);
+                        storyTl.call(() => soundEngine.playSwitchPress(), null, 4.9);
+
                         centerGroup.subMeshes.forEach((mesh) => {
                             const orig = mesh.userData.originalPosition;
                             // 1. Lift keycap straight UP out of switch socket (+Z direction)
@@ -768,6 +782,8 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                     );
 
                     // 3. High-intensity specular light sweep creating noticeable glare across metallic finish
+                    storyTl.call(() => soundEngine.playMetallicShimmer(), null, 5.8);
+
                     storyTl.to(
                         keyLight,
                         {
@@ -822,6 +838,8 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
 
                     // ── SECTION 04: ROTARY DIAL — Camera glides to macro focus on dials ──
                     // Keyboard tilts to face top-left corner, camera moves close in
+                    storyTl.call(() => soundEngine.playRotaryDialSequence(), null, 8.5);
+
                     storyTl.to(
                         camera.position,
                         {
@@ -845,7 +863,7 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                         8.3,
                     );
 
-                    // ── SECTION 05: VISUALIZED LATENCY — cyan pulse races through keyboard ──
+                    // ── SECTION 05: VISUALIZED LATENCY — vibrant cyan pulse sweeps across keyboard ──
                     storyTl.to(
                         camera.position,
                         {
@@ -860,35 +878,49 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                     storyTl.to(
                         pivotGroup.rotation,
                         {
-                            x: 0.2,
-                            y: -0.4,
-                            z: 0,
+                            x: 0.25,
+                            y: -0.3,
+                            z: 0.05,
                             duration: 1.0,
                             ease: "power2.inOut",
                         },
                         10.2,
                     );
 
-                    // Spawn a cyan point light that races under the keycaps
-                    const pulseLight = new THREE.PointLight(0x00e5ff, 0, 20);
-                    pulseLight.position.set(-22, 3.5, 2);
+                    // Dual elegant Kreo Purple point lights in pivotGroup space (grazing keycap surface)
+                    const pulseLight = new THREE.PointLight(0x685ACA, 0, 8);
+                    pulseLight.position.set(-3.5, 0.45, 1.2);
                     pivotGroup.add(pulseLight);
 
-                    // Fade in
+                    const pulseTopLight = new THREE.PointLight(0x685ACA, 0, 12);
+                    pulseTopLight.position.set(-3.5, 1.2, 1.8);
+                    pivotGroup.add(pulseTopLight);
+
+                    // Trigger single luxury light sweep sound as Kreo purple light beam begins sweep
+                    storyTl.call(() => soundEngine.playLatencyLightSweep(), null, 10.6);
+
+                    // Fade in subtle Kreo Purple light beam
                     storyTl.to(
                         pulseLight,
-                        { intensity: 28, duration: 0.4, ease: "power2.out" },
+                        { intensity: 22, duration: 0.35, ease: "power2.out" },
                         10.6,
                     );
-                    // Slow sweep left → right (cinematic, clearly visible)
                     storyTl.to(
-                        pulseLight.position,
-                        { x: 22, duration: 2.2, ease: "power1.inOut" },
+                        pulseTopLight,
+                        { intensity: 16, duration: 0.35, ease: "power2.out" },
                         10.6,
                     );
+
+                    // Cinematic sweep from far left (-3.5) to far right (+3.5) across the whole keyboard
+                    storyTl.to(
+                        [pulseLight.position, pulseTopLight.position],
+                        { x: 3.5, duration: 2.2, ease: "power1.inOut" },
+                        10.6,
+                    );
+
                     // Fade out at end of sweep
                     storyTl.to(
-                        pulseLight,
+                        [pulseLight, pulseTopLight],
                         { intensity: 0, duration: 0.4, ease: "power2.in" },
                         12.4,
                     );
@@ -918,6 +950,9 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                     );
 
                     // ── EXPLODED VIEW: Separate by material layer (physical stack) ──
+                    storyTl.call(() => soundEngine.playSwitchLift(), null, 12.6);
+                    storyTl.call(() => soundEngine.playMagneticSnap(), null, 14.2);
+
                     // Keycaps (Plastic_1/2)    → float UP     +Y
                     // Switch stems (Plastic_5) → float MID    +Y small
                     // Keyboard shell (Metal_1) → stays at 0
@@ -1123,6 +1158,7 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
                     }
 
                     if (targetKey) {
+                        soundEngine.playKeyHover();
                         const key = targetKey;
                         key.isHovered = true;
                         const worldForward = new THREE.Vector3(0, 0.025, 0.1);
@@ -1164,7 +1200,34 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
         };
         animate();
 
-        // Resize Listener
+        // Scroll Listener - Reset key uplift on scroll so keys never get stuck elevated
+        const handleScroll = () => {
+            if (currentlyHoveredKeyGroup) {
+                const prevKey = currentlyHoveredKeyGroup;
+                prevKey.isHovered = false;
+                prevKey.subMeshes.forEach((mesh) => {
+                    const endPos = mesh.userData.originalPosition;
+                    gsap.to(mesh.position, {
+                        x: endPos.x,
+                        y: endPos.y,
+                        z: endPos.z,
+                        duration: 0.15,
+                        ease: "power1.out",
+                        overwrite: "auto",
+                        onUpdate: () => {
+                            mesh.userData.currentAnimatedPos =
+                                mesh.position.clone();
+                        },
+                        onComplete: () => {
+                            delete mesh.userData.currentAnimatedPos;
+                        },
+                    });
+                });
+                currentlyHoveredKeyGroup = null;
+                if (container) container.style.cursor = "grab";
+            }
+        };
+
         const handleResize = () => {
             if (!container) return;
             const newW = container.clientWidth;
@@ -1173,6 +1236,8 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
             camera.updateProjectionMatrix();
             renderer.setSize(newW, newH);
         };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
         window.addEventListener("resize", handleResize);
 
         return () => {
@@ -1182,6 +1247,7 @@ camera.position.set(${params.camX.toFixed(3)}, ${params.camY.toFixed(3)}, ${para
             if (container) {
                 container.removeEventListener("mouseleave", handleMouseLeave);
             }
+            window.removeEventListener("scroll", handleScroll);
             window.removeEventListener("resize", handleResize);
             cancelAnimationFrame(animationFrameId);
             controls.dispose();
