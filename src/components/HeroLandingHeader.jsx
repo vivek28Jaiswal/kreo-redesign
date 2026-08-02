@@ -61,12 +61,12 @@ const HeroLandingHeader = ({ isRevealed }) => {
       {/* Model Name / Hero Title */}
       <h1 className="text-4xl md:text-5xl xl:text-6xl leading-[1.06] tracking-tight mb-4 text-neutral-900">
         <span className="block font-medium text-neutral-900">Kreo</span>
-        <span className="block font-medium text-neutral-900">Hive 75.</span>
+        <span className="block font-medium text-neutral-900">Flux.</span>
       </h1>
 
       {/* Sub-paragraph Description */}
       <p className="text-sm md:text-base text-neutral-500 font-normal leading-[1.7] max-w-xs md:max-w-sm">
-        A custom mechanical keyboard engineered for uncompromised tactile precision. Featuring factory-lubed Graywood switches, gasket-mount acoustics, and CNC aluminum construction.
+        A concept mechanical keyboard crafted to deliver a refined typing experience through premium materials, precision engineering, and thoughtful design. Built for creators, professionals, and gamers who expect every keystroke to feel effortless.
       </p>
     </div>
   );

@@ -8,70 +8,77 @@ const EASE_EDITORIAL_ENTER = 'cubic-bezier(0.16, 1, 0.3, 1)';
 const EASE_EDITORIAL_EXIT = 'cubic-bezier(0.4, 0, 1, 1)';
 
 const sections = [
-  {
-    id: 's01',
-    align: 'left',
-    eyebrow: '01 // Keybed Dynamics',
-    headingLight: 'Tactile',
-    headingBold: 'Precision.',
-    subtitle: 'Engineered key travel with zero stem wobble. Every keystroke delivers clean, predictable acoustic feedback.',
-    spec: '3.6mm Travel · 40g Actuation',
-  },
-  {
-    id: 's02',
-    align: 'right',
-    eyebrow: '02 // Switch Core',
-    headingLight: 'Graywood V4',
-    headingBold: 'Actuation.',
-    subtitle: 'Factory-lubed POM stem and PC housing engineered for a signature deep marble thock sound profile.',
-    spec: 'Pre-Lubed · Polycarbonate Housing',
-  },
-  {
-    id: 's03',
-    align: 'left',
-    eyebrow: '03 // Craftsmanship',
-    headingLight: '6063 CNC',
-    headingBold: 'Aluminum.',
-    subtitle: 'Hand-milled chamfered edges, micro-bead sandblasting finish, and durable double-shot PBT keycaps.',
-    spec: 'Anodized Finish · Chamfered Edge',
-  },
-  {
-    id: 's04',
-    align: 'right',
-    eyebrow: '04 // Control',
-    headingLight: 'Machined',
-    headingBold: 'Rotary Dial.',
-    subtitle: '32 tactile detents for instant volume, brightness, and audio media control. Knurled aluminum finish.',
-    spec: '32 Detents · Infinite Scroll',
-  },
-  {
-    id: 's05',
-    align: 'left',
-    eyebrow: '05 // Speed',
-    headingLight: 'Sub-1ms',
-    headingBold: 'Response.',
-    subtitle: '1000Hz polling rate. Zero perceptible input lag across 2.4GHz ultra-fast wireless and USB-C wired.',
-    spec: '1000Hz Polling · 0.8ms Latency',
-  },
-  {
-    id: 's06',
-    align: 'right',
-    eyebrow: '06 // Architecture',
-    headingLight: 'Acoustic',
-    headingBold: 'Stack.',
-    subtitle: 'Multi-layer precision dampened construction absorbs every hollow resonance from the inside out.',
-    spec: 'PORON Foam · IXPE Pad · FR4 Plate',
-  },
-  {
-    id: 's07',
-    align: 'center',
-    isFinal: true,
-    eyebrow: '',
-    headingLight: 'Kreo Mechanical',
-    headingBold: '',
-    subtitle: 'Built with premium materials, precision engineering, and performance at its core. Every detail is designed to deliver a keyboard that feels as exceptional as it looks.',
-    spec: '',
-  },
+    {
+        id: "s01",
+        align: "left",
+        eyebrow: "01 // Keybed Dynamics",
+        headingLight: "Tactile",
+        headingBold: "Precision.",
+        subtitle:
+            "Engineered for accuracy from the very first keystroke. Every press feels consistent, responsive, and effortless—built to keep up with every idea, every game, and every workflow.",
+        spec: "3.6mm Travel · 40g Actuation",
+    },
+    {
+        id: "s02",
+        align: "right",
+        eyebrow: "02 // Switch Core",
+        headingLight: "Graywood V4",
+        headingBold: "Actuation.",
+        subtitle:
+            "Powered by Graywood V4 switches for a smooth, refined typing experience. Factory-lubed for reduced friction, delivering fast actuation with a satisfying feel and sound.",
+        spec: "Pre-Lubed · Polycarbonate Housing",
+    },
+    {
+        id: "s03",
+        align: "left",
+        eyebrow: "03 // Craftsmanship",
+        headingLight: "6063 CNC",
+        headingBold: "Aluminum.",
+        subtitle:
+            "Crafted from aerospace-grade 6063 aluminum and precision CNC machined into a single, rigid frame. Premium in hand, durable by design.",
+        spec: "Anodized Finish · Chamfered Edge",
+    },
+    {
+        id: "s04",
+        align: "right",
+        eyebrow: "04 // Control",
+        headingLight: "Machined",
+        headingBold: "Rotary Dial.",
+        subtitle:
+            "A finely machined aluminum dial that puts essential controls at your fingertips. Adjust volume, scroll through media, or customize it to match the way you work.",
+        spec: "32 Detents · Infinite Scroll",
+    },
+    {
+        id: "s05",
+        align: "left",
+        eyebrow: "05 // Speed",
+        headingLight: "Sub-1ms",
+        headingBold: "Response.",
+        subtitle:
+            "Ultra-low latency with a 1000Hz polling rate ensures every keystroke is registered instantly, giving you the speed and confidence to react without delay.",
+        spec: "1000Hz Polling · 0.8ms Latency",
+    },
+    {
+        id: "s06",
+        align: "right",
+        eyebrow: "06 // Architecture",
+        headingLight: "Acoustic",
+        headingBold: "Stack.",
+        subtitle:
+            "A carefully engineered multi-layer acoustic stack absorbs unwanted vibrations, creating a deeper, cleaner, and more satisfying typing sound with every keypress.",
+        spec: "PORON Foam · IXPE Pad · FR4 Plate",
+    },
+    {
+        id: "s07",
+        align: "center",
+        isFinal: true,
+        eyebrow: "",
+        headingLight: "Kreo Mechanical",
+        headingBold: "",
+        subtitle:
+            "Built with premium materials, precision engineering, and performance at its core. Every detail is designed to deliver a keyboard that feels as exceptional as it looks.",
+        spec: "",
+    },
 ];
 
 /**
@@ -144,7 +151,7 @@ const SectionStage = ({ section }) => {
     const st = ScrollTrigger.create({
       trigger: triggerEl,
       start: section.isFinal ? 'top 70%' : 'top 50%',
-      end: section.isFinal ? 'bottom 20%' : 'bottom 50%',
+      end: section.isFinal ? 'bottom 80%' : 'bottom 50%',
       onEnter: playEntrance,
       onLeave: playExit,
       onEnterBack: playEntrance,
