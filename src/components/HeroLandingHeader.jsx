@@ -60,8 +60,7 @@ const HeroLandingHeader = ({ isRevealed }) => {
     >
       {/* Model Name / Hero Title */}
       <h1 className="text-4xl md:text-5xl xl:text-6xl leading-[1.06] tracking-tight mb-4 text-neutral-900">
-        <span className="block font-medium text-neutral-900">Kreo</span>
-        <span className="block font-medium text-neutral-900">Flux.</span>
+        <span className="block font-medium text-neutral-900">Kreo Flux.</span>
       </h1>
 
       {/* Sub-paragraph Description */}
